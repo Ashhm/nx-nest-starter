@@ -1,0 +1,20 @@
+{{- range $apiName := .Values.app }}
+{{- if $apiName.service -}}
+{{ $Name := $apiName.fullName }}
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: {{ $Name }}
+  labels:
+    app: {{ $Name }}
+    release: {{ $.Chart.Name }}
+spec:
+  selector:
+    app: {{ $Name }}
+  ports:
+    - port: {{ default 80  $apiName.service.servicePort }}
+      targetPort: {{ default 80 $apiName.service.targetPort }}
+      name: {{ $Name }}
+{{- end }}
+{{- end -}}

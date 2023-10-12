@@ -1,0 +1,1 @@
+export const APP_CONFIG_TOKEN = 'APP_AUTH_CONFIG_TOKEN';

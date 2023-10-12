@@ -1,0 +1,29 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": ".",
+    "declaration": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "lib": ["es2020", "dom"],
+    "module": "esnext",
+    "moduleResolution": "node",
+    "paths": {
+      "@libs/nest/*": ["libs/nest/*/src"],
+      "@libs/nest/shared/*": ["libs/nest/shared/src/*"],
+      "@libs/node/*": ["libs/node/*/src"],
+      "@libs/shared/*": ["libs/shared/src/*"],
+      "@libs/test/*": ["libs/shared/test/*"],
+      "@libs/nest/test/*": ["libs/nest/*/test"]
+    },
+    "rootDir": ".",
+    "skipDefaultLibCheck": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strictPropertyInitialization": false,
+    "target": "es2015",
+    "typeRoots": ["node_modules/@types", "types"]
+  },
+  "exclude": ["node_modules", "tmp"]
+}

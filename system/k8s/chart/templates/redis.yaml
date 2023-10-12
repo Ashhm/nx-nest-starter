@@ -1,0 +1,44 @@
+{{ $Name := .Values.app.name }}
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ $Name }}-redis
+  labels:
+    app: {{ $Name }}-redis
+    release: {{ $.Chart.Name }}
+spec:
+  ports:
+    - port: 6379
+      targetPort: 6379
+  selector:
+    app: {{ $Name }}-redis
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $Name }}-redis
+  labels:
+    app: {{ $Name }}-redis
+    release: {{ $.Chart.Name }}
+spec:
+  selector:
+    matchLabels:
+      app: {{ $Name }}-redis
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: {{ $Name }}-redis
+    spec:
+      containers:
+        - name: master
+          image: redis
+          resources:
+            requests:
+              cpu: 100m
+              memory: 100Mi
+          ports:
+            - containerPort: 6379

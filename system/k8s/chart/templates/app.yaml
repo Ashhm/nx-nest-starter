@@ -1,0 +1,102 @@
+{{- range $apiName := .Values.app }}
+{{- if $apiName.enabled -}}
+{{ $Name := $apiName.fullName }}
+---
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: migration-{{ $Name }}
+  labels:
+    release: {{ $.Chart.Name }}
+  annotations:
+    "helm.sh/hook": pre-install,pre-upgrade
+    "helm.sh/hook-weight": "-1"
+    "helm.sh/hook-delete-policy": before-hook-creation,hook-succeeded
+spec:
+  activeDeadlineSeconds: 300
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+        - name: migration-{{ $Name }}
+          image: {{ $.Values.IMAGE }}
+          command: [ 'node', 'migrator', 'up' ]
+          env:
+              {{- if $.Values.config.extraEnvVars }}
+              {{- tpl (toYaml $.Values.config.extraEnvVars) $ | nindent 12 }}
+              {{- end }}
+              {{- if $apiName.extraEnvVars }}
+              {{- tpl (toYaml $apiName.extraEnvVars) $ | nindent 12 }}
+              {{- end }}
+              {{- range $env, $configkey := $.Values.config.configMapVars }}
+            - name: {{ $env }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $.Values.config.configMapName }}
+                  key: {{ $configkey }}
+              {{- end }}
+      imagePullSecrets:
+        - name: {{ $.Values.ImagePullSecret }}
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $Name }}
+  labels:
+    app: {{ $Name }}
+    release: {{ $.Chart.Name }}
+spec:
+  replicas: {{  default 1 $apiName.replicas }}
+  selector:
+    matchLabels:
+      app: {{ $Name }}
+  strategy:
+    type: {{ default "RollingUpdate" $apiName.strategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ $Name }}
+    spec:
+      containers:
+        - name: {{ $Name }}
+          image: {{ $.Values.IMAGE }}
+          env:
+            {{- if $.Values.config.extraEnvVars }}
+            {{- tpl (toYaml $.Values.config.extraEnvVars) $ | nindent 12 }}
+            {{- end }}
+            {{- if $apiName.extraEnvVars }}
+            {{- tpl (toYaml $apiName.extraEnvVars) $ | nindent 12 }}
+            {{- end }}
+            {{- range $env, $configkey := $.Values.config.configMapVars }}
+            - name: {{ $env }}
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ $.Values.config.configMapName }}
+                  key: {{ $configkey }}
+            {{- end }}
+          resources:
+            {{- $apiName.resources | toYaml | nindent 12 }}
+          {{- if $apiName.readinessProbe }}
+          readinessProbe:
+            httpGet:
+              path: {{ $apiName.readinessProbe.path }}
+              port: {{ $apiName.readinessProbe.port }}
+            timeoutSeconds: {{ $apiName.readinessProbe.timeoutSeconds }}
+            initialDelaySeconds: {{ $apiName.readinessProbe.initialDelaySeconds }}
+          {{- end }}
+          {{- if $apiName.livenessProbe }}
+          livenessProbe:
+            httpGet:
+              path: {{ $apiName.livenessProbe.path }}
+              port: {{ $apiName.livenessProbe.port }}
+            timeoutSeconds: {{ $apiName.livenessProbe.timeoutSeconds }}
+            initialDelaySeconds: {{ $apiName.livenessProbe.initialDelaySeconds }}
+          {{- end }}
+      imagePullSecrets:
+        - name: {{ $.Values.ImagePullSecret }}
+{{- end }}
+{{- end -}}

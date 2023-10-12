@@ -1,0 +1,64 @@
+{
+  "name": "root",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/root/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nx/webpack:webpack",
+      "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
+      "options": {
+        "target": "node",
+        "compiler": "tsc",
+        "outputPath": "dist/apps/root",
+        "main": "apps/root/src/main.ts",
+        "tsConfig": "apps/root/tsconfig.app.json",
+        "assets": ["apps/root/src/assets"],
+        "isolatedConfig": true,
+        "webpackConfig": "apps/root/webpack.config.js"
+      },
+      "configurations": {
+        "development": {},
+        "production": {}
+      }
+    },
+    "serve": {
+      "executor": "@nx/js:node",
+      "defaultConfiguration": "development",
+      "options": {
+        "buildTarget": "root:build"
+      },
+      "configurations": {
+        "development": {
+          "buildTarget": "root:build:development"
+        },
+        "production": {
+          "buildTarget": "root:build:production"
+        }
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/root/**/*.ts"]
+      }
+    },
+    "dev": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/root",
+        "command": "ts-node-dev -r tsconfig-paths/register --rs --project=tsconfig.app.json src/main.ts"
+      }
+    },
+    "migration": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/root",
+        "command": "ts-node-dev -r tsconfig-paths/register --rs --project=tsconfig.app.json src/migrator.ts"
+      }
+    }
+  },
+  "tags": []
+}

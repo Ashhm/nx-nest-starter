@@ -1,0 +1,14 @@
+# Files and directories to ignore when copying the project to the Docker image
+
+# Ignore development and build artifacts
+node_modules
+dist
+tmp
+*.log
+
+# Ignore Nx.dev-specific files
+.nx
+apps/*/node_modules
+apps/*/dist
+apps/*/tmp
+apps/*/*.log
