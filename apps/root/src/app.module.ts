@@ -5,6 +5,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { LoggerModule } from 'nestjs-pino';
 import { AccessTokenGuard, AuthModule } from '@libs/nest/auth';
 import { HealthModule } from '@libs/nest/health';
+import { RolesGuard } from '@libs/nest/shared/guards';
 import { UserModule } from '@libs/nest/user';
 import { AppConfigModule, AppConfigService, DataAccessConfigModule, DataAccessConfigService } from './configs';
 
@@ -38,6 +39,10 @@ import { AppConfigModule, AppConfigService, DataAccessConfigModule, DataAccessCo
     {
       provide: APP_GUARD,
       useClass: AccessTokenGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
     },
   ],
 })

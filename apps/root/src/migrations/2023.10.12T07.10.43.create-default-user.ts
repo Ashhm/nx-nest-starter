@@ -2,6 +2,7 @@ import type { MigrationFn } from 'umzug';
 import { MigrationContext } from '@libs/nest/shared/interfaces';
 import { UserService } from '@libs/nest/user';
 import { CreateUserDto } from '@libs/shared/dtos';
+import { UserRole } from '@libs/shared/enums';
 import { DtoFactory } from '@libs/shared/factories';
 
 const username = process.env['DEFAULT_USERNAME'] || 'admin@mail.com';
@@ -13,6 +14,7 @@ export const up: MigrationFn<MigrationContext> = async (params) => {
   const userService = params.context.app.get(UserService);
   const createUserDto = DtoFactory.create(CreateUserDto, {
     username: username,
+    role: UserRole.Admin,
     password: userPassword,
     firstName: userFirstName,
     lastName: userLastName,

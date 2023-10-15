@@ -1,8 +1,10 @@
 import { INestApplication } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { FixtureHelperFactory, SpecHelperFactory } from '@libs/nest/test';
 import { UserFixtureHelper, UserSpecHelper } from '@libs/nest/test/user';
 import { AuthSpecHelper } from '../test/helpers';
 import { AuthModule } from './auth.module';
+import { AccessTokenGuard } from './guards';
 
 describe('AuthController', () => {
   let app: INestApplication;
@@ -12,6 +14,12 @@ describe('AuthController', () => {
   beforeAll(async () => {
     app = await specHelper.createApp({
       imports: [AuthModule],
+      providers: [
+        {
+          provide: APP_GUARD,
+          useClass: AccessTokenGuard,
+        },
+      ],
     });
 
     await app.init();

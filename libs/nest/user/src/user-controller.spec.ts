@@ -2,6 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import { FixtureHelperFactory, SpecHelperFactory } from '@libs/nest/test';
 import { CreateUserDto } from '@libs/shared/dtos';
+import { User } from '@libs/shared/interfaces';
 import { UserFixtureHelper, UserSpecHelper } from '../test/helpers';
 import { UserController } from './user.controller';
 import { userModelDefinition } from './user.schema';
@@ -42,6 +43,7 @@ describe('UserController', () => {
           expect(body).toBeDefined();
           expect(body.id).toBeDefined();
           expect(body.username).toEqual(createUserDto.username);
+          expect(body.role).toEqual(createUserDto.role);
           expect(body.firstName).toEqual(createUserDto.firstName);
           expect(body.lastName).toEqual(createUserDto.lastName);
           expect(body?.password).not.toBeDefined();
@@ -86,6 +88,7 @@ describe('UserController', () => {
           expect(body).toBeDefined();
           expect(body.id).toEqual(context.user.id);
           expect(body.username).toEqual(context.user.username);
+          expect(body.role).toEqual(context.user.role);
           expect(body.firstName).toEqual(context.user.firstName);
           expect(body.lastName).toEqual(context.user.lastName);
           expect(body?.password).not.toBeDefined();
@@ -106,6 +109,7 @@ describe('UserController', () => {
           expect(body).toBeDefined();
           expect(body.id).toEqual(context.user.id);
           expect(body.username).toEqual(context.user.username);
+          expect(body.role).toEqual(context.user.role);
           expect(body.firstName).toEqual(updateUserDto.firstName);
           expect(body.lastName).toEqual(updateUserDto.lastName);
           expect(body?.password).not.toBeDefined();
@@ -126,9 +130,47 @@ describe('UserController', () => {
           expect(body).toBeDefined();
           expect(body.id).toEqual(context.user.id);
           expect(body.username).toEqual(context.user.username);
+          expect(body.role).toEqual(context.user.role);
           expect(body.firstName).toEqual(context.user.firstName);
           expect(body.lastName).toEqual(context.user.lastName);
           expect(body?.password).not.toBeDefined();
+        });
+    });
+  });
+
+  describe('GET /users', () => {
+    specHelper.withUser();
+    const context = specHelper.withUser();
+
+    it('should return users', async () => {
+      await specHelper.httpClient
+        .get(`/users`)
+        .expect(200)
+        .expect(({ body }) => {
+          expect(body).toBeDefined();
+          expect(body.items).toBeDefined();
+          expect(body.items).toHaveLength(2);
+          body.items.forEach((user: User) => {
+            expect(user.id).toBeDefined();
+            expect(user.username).toBeDefined();
+            expect(user.role).toBeDefined();
+            expect(user.firstName).toBeDefined();
+            expect(user.lastName).toBeDefined();
+            expect(user?.password).not.toBeDefined();
+          });
+        });
+    });
+
+    it('should return users filtered by username', async () => {
+      const username = context.user.username;
+      await specHelper.httpClient
+        .get(`/users?filter[username]=${username}`)
+        .expect(200)
+        .expect(({ body }) => {
+          expect(body).toBeDefined();
+          expect(body.items).toBeDefined();
+          expect(body.items).toHaveLength(1);
+          expect(body.items[0].username).toEqual(username);
         });
     });
   });

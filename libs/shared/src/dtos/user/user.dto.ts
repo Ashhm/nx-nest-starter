@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Exclude, Transform } from 'class-transformer';
-import { IsDate, IsEmail, IsString } from 'class-validator';
+import { IsDate, IsEmail, IsEnum, IsString } from 'class-validator';
+import { UserRole } from '../../enums/';
 import { User } from '../../interfaces';
 
 export class UserDto implements User {
@@ -12,6 +13,10 @@ export class UserDto implements User {
   @IsEmail()
   @Transform(({ value }) => value.toLowerCase())
   public username: string;
+
+  @ApiProperty({ type: String, enum: UserRole })
+  @IsEnum(UserRole)
+  public role: UserRole;
 
   @ApiProperty()
   @IsString()

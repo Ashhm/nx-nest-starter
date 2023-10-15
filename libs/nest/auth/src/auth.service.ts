@@ -23,7 +23,7 @@ export class AuthService {
     if (user) {
       const isPasswordValid = await verifyHash(password, user.password);
       if (isPasswordValid) {
-        return { id: user.id };
+        return { id: user.id, role: user.role };
       }
     }
     return null;

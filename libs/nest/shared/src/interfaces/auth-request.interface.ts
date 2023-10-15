@@ -1,5 +1,5 @@
+import { User } from '@libs/shared/interfaces';
+
 export interface AuthRequest extends Request {
-  user: {
-    id: string;
-  };
+  user: Pick<User, 'id' | 'role'>;
 }

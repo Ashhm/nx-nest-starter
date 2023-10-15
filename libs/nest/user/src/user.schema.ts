@@ -1,10 +1,12 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore broken types
-import { default as paginate } from 'mongoose-paginate-v2';
 import { defaultMongodbSchemaOptions } from '@libs/nest/shared/schemas';
 import { createHash } from '@libs/nest/shared/utils';
+import { UserRole } from '@libs/shared/enums';
 import { User } from '@libs/shared/interfaces';
+
+import 'mongoose-paginate-v2';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const paginate = require('mongoose-paginate-v2');
 
 @Schema(defaultMongodbSchemaOptions)
 export class UserSchemaMetadata implements User {
@@ -12,6 +14,9 @@ export class UserSchemaMetadata implements User {
 
   @Prop({ required: true, unique: true, lowercase: true })
   public username: string;
+
+  @Prop({ required: true, enum: UserRole })
+  public role: UserRole;
 
   @Prop({ required: true })
   public firstName: string;

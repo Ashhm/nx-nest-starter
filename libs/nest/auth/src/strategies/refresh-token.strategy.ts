@@ -30,6 +30,6 @@ export class RefreshTokenStrategy extends PassportStrategy(Strategy, StrategyNam
     }
     const deviceId = req.fp.id;
     await this.authService.validateRefreshToken(payload.sub, deviceId, token);
-    return { id: payload.sub };
+    return { id: payload.sub, role: payload.role };
   }
 }

@@ -5,6 +5,11 @@ import { User } from '../../interfaces';
 import { PaginationOptionsDto } from '../pagination-options.dto';
 
 export class FindUserDto implements Partial<Record<keyof User, unknown>> {
+  @ApiPropertyOptional({ name: 'filter[id]' })
+  @IsOptional()
+  @IsString()
+  public id?: string;
+
   @ApiPropertyOptional({ name: 'filter[username]' })
   @IsOptional()
   @IsEmail()
