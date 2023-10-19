@@ -21,7 +21,6 @@ describe('AuthController', () => {
         },
       ],
     });
-
     await app.init();
   });
 

@@ -1,2 +1,3 @@
 export * from './pagination-default-options.constants';
-export * from './metadata-keys.constats';
+export * from './metadata-key.constants';
+export * from './message-pattern.constants';

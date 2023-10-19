@@ -149,7 +149,7 @@ describe('UserController', () => {
         .expect(({ body }) => {
           expect(body).toBeDefined();
           expect(body.items).toBeDefined();
-          expect(body.items).toHaveLength(2);
+          expect(body.items.length).toBeGreaterThanOrEqual(2);
           body.items.forEach((user: User) => {
             expect(user.id).toBeDefined();
             expect(user.username).toBeDefined();

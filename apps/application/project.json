@@ -1,7 +1,7 @@
 {
-  "name": "root",
+  "name": "application",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "apps/root/src",
+  "sourceRoot": "/src",
   "projectType": "application",
   "targets": {
     "build": {
@@ -11,12 +11,12 @@
       "options": {
         "target": "node",
         "compiler": "tsc",
-        "outputPath": "dist/apps/root",
-        "main": "apps/root/src/main.ts",
-        "tsConfig": "apps/root/tsconfig.app.json",
-        "assets": ["apps/root/src/assets"],
+        "outputPath": "dist/apps/application",
+        "main": "apps/application/src/main.ts",
+        "tsConfig": "apps/application/tsconfig.app.json",
+        "assets": ["apps/application/src/assets"],
         "isolatedConfig": true,
-        "webpackConfig": "apps/root/webpack.config.js"
+        "webpackConfig": "apps/application/webpack.config.js"
       },
       "configurations": {
         "development": {},
@@ -27,14 +27,14 @@
       "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
-        "buildTarget": "root:build"
+        "buildTarget": "application:build"
       },
       "configurations": {
         "development": {
-          "buildTarget": "root:build:development"
+          "buildTarget": "application:build:development"
         },
         "production": {
-          "buildTarget": "root:build:production"
+          "buildTarget": "application:build:production"
         }
       }
     },
@@ -42,20 +42,20 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/root/**/*.ts"]
+        "lintFilePatterns": ["apps/application/**/*.ts"]
       }
     },
     "dev": {
       "executor": "nx:run-commands",
       "options": {
-        "cwd": "apps/root",
+        "cwd": "apps/application",
         "command": "ts-node-dev -r tsconfig-paths/register --rs --project=tsconfig.app.json src/main.ts"
       }
     },
     "migration": {
       "executor": "nx:run-commands",
       "options": {
-        "cwd": "apps/root",
+        "cwd": "apps/application",
         "command": "ts-node-dev -r tsconfig-paths/register --rs --project=tsconfig.app.json src/migrator.ts"
       }
     }

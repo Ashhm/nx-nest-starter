@@ -1,14 +1,14 @@
 {
-  "name": "root-e2e",
+  "name": "application-e2e",
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
-  "implicitDependencies": ["root"],
+  "implicitDependencies": ["application"],
   "projectType": "application",
   "targets": {
     "e2e": {
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{e2eProjectRoot}"],
       "options": {
-        "jestConfig": "apps/root-e2e/jest.config.ts",
+        "jestConfig": "apps/application-e2e/jest.config.ts",
         "passWithNoTests": true
       }
     },
@@ -16,7 +16,7 @@
       "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["apps/root-e2e/**/*.{js,ts}"]
+        "lintFilePatterns": ["apps/application-e2e/**/*.{js,ts}"]
       }
     }
   }

@@ -39,8 +39,11 @@ export class BaseSpecHelper<Ctx = object> {
 
   public createPromiseWithResolver(onResolve = () => undefined) {
     let resolver: (value: unknown) => void = onResolve;
-    const promise = new Promise((resolve) => {
+    const promise = new Promise((resolve, reject) => {
       resolver = resolve;
+      setTimeout(() => {
+        reject(new Error('Promise timeout exceeded'));
+      }, 5000);
     });
     return { resolver, promise };
   }
